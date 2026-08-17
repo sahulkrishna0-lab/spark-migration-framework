@@ -1,0 +1,23 @@
+# Core
+pyspark>=3.4.0,<4.0.0
+delta-spark>=2.4.0
+apache-airflow>=2.7.0,<3.0.0
+
+# Configuration
+pyyaml>=6.0
+
+# Data Quality
+great-expectations>=0.17.0
+
+# Airflow Providers
+apache-airflow-providers-apache-spark>=4.0.0
+apache-airflow-providers-slack>=7.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+
+# Linting & Formatting
+ruff>=0.1.0
+mypy>=1.5.0
