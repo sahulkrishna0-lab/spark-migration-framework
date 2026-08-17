@@ -1,0 +1,66 @@
+# Pipeline Configuration for Spark Migration Framework
+# This YAML defines a single pipeline migration specification
+
+pipeline:
+  name: "customer_events_migration"
+  version: "1.0.0"
+  description: "Migrate customer events from Hive to Delta Lake"
+  owner: "data-engineering@company.com"
+
+source:
+  type: "hive"
+  database: "legacy_db"
+  table: "customer_events"
+  connection:
+    metastore_uri: "thrift://hive-metastore:9083"
+    warehouse_dir: "hdfs:///user/hive/warehouse"
+  partition_columns:
+    - "event_date"
+    - "region"
+
+target:
+  type: "delta"
+  database: "lakehouse"
+  table: "customer_events"
+  location: "s3://data-lake-prod/lakehouse/customer_events"
+  connection:
+    catalog: "glue_catalog"
+    region: "us-east-1"
+  partition_columns:
+    - "event_date"
+    - "region"
+  table_properties:
+    delta.autoOptimize.optimizeWrite: "true"
+    delta.autoOptimize.autoCompact: "true"
+
+migration:
+  mode: "incremental"  # full | incremental
+  watermark_column: "event_date"
+  batch_size: "7d"  # Process 7 days at a time
+  start_date: "2024-01-01"
+  checkpoint_location: "/tmp/migration_checkpoints/customer_events"
+
+validation:
+  row_count_tolerance: 0.001  # 0.1% tolerance
+  checksum_columns:
+    - "event_id"
+    - "customer_id"
+    - "event_amount"
+  schema_strict_mode: false
+  allow_type_coercion:
+    - source: "STRING"
+      target: "VARCHAR(255)"
+    - source: "INT"
+      target: "BIGINT"
+
+scheduling:
+  dag_id: "migrate_customer_events"
+  schedule_interval: "@daily"
+  start_date: "2024-01-01"
+  retries: 3
+  retry_delay_minutes: 5
+  sla_minutes: 120
+  notifications:
+    slack_channel: "#data-pipeline-alerts"
+    on_failure: true
+    on_sla_miss: true
