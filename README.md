@@ -1,5 +1,7 @@
 # 🚀 Spark Pipeline Migration Framework
 
+![CI](https://github.com/sahulkrishna0-lab/spark-migration-framework/actions/workflows/ci.yml/badge.svg)
+
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://python.org)
 [![PySpark 3.4+](https://img.shields.io/badge/PySpark-3.4%2B-orange.svg)](https://spark.apache.org)
 [![Apache Airflow 2.x](https://img.shields.io/badge/Airflow-2.x-017CEE.svg)](https://airflow.apache.org)
